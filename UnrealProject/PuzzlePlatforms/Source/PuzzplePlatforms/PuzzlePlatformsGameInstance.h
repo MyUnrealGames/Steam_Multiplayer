@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
 #include "MenuSystem/MenuInterface.h"
+#include "OnlineSubsystem.h"
 #include "PuzzlePlatformsGameInstance.generated.h"
 /**
  * 
@@ -24,6 +25,17 @@ private:
 
 	class UMenuWidget* InGameMenu;
 
+	IOnlineSessionPtr SessionInterface;
+	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
+
+	void OnCreateSessionComplete(FName SessionName, bool Success);
+
+	void OnDestroySessionComplete(FName SessionName, bool Success);
+
+	void OnFindSessionsComplete(bool Success);
+
+	void CreateSession();
+
 public:
 	UPuzzlePlatformsGameInstance(const FObjectInitializer & ObjectInitializer);
 	
@@ -42,6 +54,7 @@ public:
 	void Join(const FString &Address) override;
 
 	void Quit() override;
+
 
 	virtual void LoadMainMenu() override;
 };
