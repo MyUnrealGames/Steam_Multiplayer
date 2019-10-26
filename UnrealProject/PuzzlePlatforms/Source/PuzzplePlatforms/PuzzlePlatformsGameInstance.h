@@ -6,6 +6,7 @@
 #include "Engine/GameInstance.h"
 #include "MenuSystem/MenuInterface.h"
 #include "OnlineSubsystem.h"
+#include "MenuSystem/MainMenu.h"
 #include "PuzzlePlatformsGameInstance.generated.h"
 /**
  * 
@@ -21,7 +22,7 @@ private:
 
 	TSubclassOf<class UUserWidget> InGameMenuClass;
 
-	class UMenuWidget* MainMenu;
+	class UMainMenu* MainMenu;
 
 	class UMenuWidget* InGameMenu;
 
@@ -57,4 +58,6 @@ public:
 
 
 	virtual void LoadMainMenu() override;
+
+	virtual void RefreshServerList() override;
 };
