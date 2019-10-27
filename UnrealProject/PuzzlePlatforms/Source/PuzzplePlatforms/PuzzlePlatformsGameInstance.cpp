@@ -35,6 +35,7 @@ void UPuzzlePlatformsGameInstance::Init()
 	if (SubSystem != nullptr) 
 	{
 		SessionInterface = SubSystem->GetSessionInterface();
+		UE_LOG(LogTemp, Warning, TEXT("Found subsystem: %s"), *SubSystem->GetSubsystemName().ToString());
 
 		if (SessionInterface.IsValid())
 
