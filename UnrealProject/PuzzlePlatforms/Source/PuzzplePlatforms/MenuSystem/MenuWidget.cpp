@@ -8,7 +8,11 @@ bool UMenuWidget::Setup()
 {
 	this->AddToViewport();
 
-	APlayerController* Controller = GetWorld()->GetFirstPlayerController();
+
+	UWorld* World = GetWorld();
+	if (!ensure(World != nullptr)) return false;
+
+	APlayerController* Controller = World->GetFirstPlayerController();
 	if (!ensure(Controller != nullptr)) return false;
 
 	FInputModeUIOnly InputMode;

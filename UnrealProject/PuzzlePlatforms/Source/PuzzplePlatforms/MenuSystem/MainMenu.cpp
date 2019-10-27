@@ -20,26 +20,6 @@ UMainMenu::UMainMenu(const FObjectInitializer & ObjectInitializer)
 	ServerRowClass = ServerRowBPClass.Class;
 }
 
-void UMainMenu::SetServerList(TArray<FString> ServerNames)
-{
-	ServerList->ClearChildren();
-
-	UWorld* World = this->GetWorld();
-	if (!ensure(World != nullptr)) return;
-
-	for (const FString& ServerName : ServerNames)
-	{
-		UServerRow* Row = CreateWidget<UServerRow>(World, ServerRowClass);
-		if (!ensure(Row != nullptr)) return;
-
-		Row->ServerName->SetText(FText::FromString(ServerName));
-		ServerList->AddChild(Row);
-	}
-	
-}
-
-
-
 bool UMainMenu::Initialize()
 {
 	bool Success = Super::Initialize();
@@ -57,7 +37,7 @@ bool UMainMenu::Initialize()
 	if (ensure(CancelJoinMenuButton != nullptr)) {
 		CancelJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::OpenMainMenu);
 	}
-	
+
 	if (ensure(ConfirmJoinMenuButton != nullptr)) {
 		ConfirmJoinMenuButton->OnClicked.AddDynamic(this, &UMainMenu::JoinServer);
 	}
@@ -68,7 +48,27 @@ bool UMainMenu::Initialize()
 	return SetupResult;
 }
 
+void UMainMenu::SetServerList(TArray<FString> ServerNames)
+{
+	ServerList->ClearChildren();
 
+	UWorld* World = this->GetWorld();
+	if (!ensure(World != nullptr)) return;
+
+	uint32 i = 0;
+	for (const FString& ServerName : ServerNames)
+	{
+		UServerRow* Row = CreateWidget<UServerRow>(World, ServerRowClass);
+		if (!ensure(Row != nullptr)) return;
+
+		Row->SetText(FText::FromString(ServerName));
+		Row->Setup(this, i);
+
+		ServerList->AddChild(Row);
+		++i;
+	}
+	
+}
 
 void UMainMenu::HostServer()
 {
@@ -77,7 +77,6 @@ void UMainMenu::HostServer()
 		MenuInterface->Host();
 	}
 }
-
 
 void UMainMenu::OpenJoinMenu()
 {
@@ -96,11 +95,24 @@ void UMainMenu::QuitGame()
 	MenuInterface->Quit();
 } 
 
+
+void UMainMenu::SelectIndex(uint32 Index)
+{
+	SelectedIndex = Index;
+}
+
 void UMainMenu::JoinServer()
 {
-	if (MenuInterface != nullptr)
+	if (SelectedIndex.IsSet())
 	{
-		MenuInterface->Join("");
+		if (ensure(MenuInterface != nullptr))
+		{
+			MenuInterface->Join(SelectedIndex.GetValue());
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Selected index is not set."));
 	}
 }
 

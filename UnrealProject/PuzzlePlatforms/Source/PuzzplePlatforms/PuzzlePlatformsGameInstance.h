@@ -7,7 +7,10 @@
 #include "MenuSystem/MenuInterface.h"
 #include "OnlineSubsystem.h"
 #include "MenuSystem/MainMenu.h"
+#include "OnlineSessionInterface.h" 
+
 #include "PuzzlePlatformsGameInstance.generated.h"
+
 /**
  * 
  */
@@ -19,21 +22,18 @@ class PUZZLEPLATFORMS_API UPuzzlePlatformsGameInstance : public UGameInstance, p
 private:
 
 	TSubclassOf<class UUserWidget> MenuClass;
-
 	TSubclassOf<class UUserWidget> InGameMenuClass;
 
 	class UMainMenu* MainMenu;
-
 	class UMenuWidget* InGameMenu;
 
 	IOnlineSessionPtr SessionInterface;
 	TSharedPtr<class FOnlineSessionSearch> SessionSearch;
 
 	void OnCreateSessionComplete(FName SessionName, bool Success);
-
 	void OnDestroySessionComplete(FName SessionName, bool Success);
-
 	void OnFindSessionsComplete(bool Success);
+	void OnJoinSessionComplete(FName Session, EOnJoinSessionCompleteResult::Type Result);
 
 	void CreateSession();
 
@@ -52,7 +52,7 @@ public:
 	virtual void Host() override;
 
 	UFUNCTION(Exec)
-	void Join(const FString &Address) override;
+	void Join(const uint32& Index) override;
 
 	void Quit() override;
 
